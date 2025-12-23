@@ -75,7 +75,10 @@ function startTimer() {
             localStorage.removeItem('timerRunning');
             localStorage.removeItem('timerPaused');
             
-            // Notification
+            // Play sound notification
+            playTimerSound();
+            
+            // Browser notification
             if (Notification.permission === 'granted') {
                 new Notification('Timer Finished!', {
                     body: 'Your study session timer has completed.',
@@ -126,6 +129,51 @@ timerInput.addEventListener('change', () => {
         updateTimerDisplay();
     }
 });
+
+// Play sound notification (Pomodoro style)
+function playTimerSound() {
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // Create a pleasant beep sound (800Hz tone)
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        // Fade in/out for smoother sound
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+        
+        // Play a second beep after a short delay for Pomodoro-style notification
+        setTimeout(() => {
+            const oscillator2 = audioContext.createOscillator();
+            const gainNode2 = audioContext.createGain();
+            
+            oscillator2.connect(gainNode2);
+            gainNode2.connect(audioContext.destination);
+            
+            oscillator2.frequency.value = 800;
+            oscillator2.type = 'sine';
+            
+            gainNode2.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode2.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+            gainNode2.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+            
+            oscillator2.start(audioContext.currentTime);
+            oscillator2.stop(audioContext.currentTime + 0.5);
+        }, 600);
+    } catch (error) {
+        console.log('Audio playback not supported or blocked:', error);
+    }
+}
 
 // Request notification permission on load
 if ('Notification' in window && Notification.permission === 'default') {
@@ -187,32 +235,46 @@ function addListItem(listId, text, index) {
     
     const content = document.createElement('span');
     content.className = 'item-content';
-    content.textContent = text || 'Click to edit';
+    const isPlaceholder = !text || text.trim() === '';
+    content.textContent = isPlaceholder ? 'Click to edit' : text;
     content.contentEditable = false;
+    content.setAttribute('data-placeholder', isPlaceholder);
     
     // Make content editable on click
-    content.addEventListener('click', function() {
-        if (!content.contentEditable) {
-            content.contentEditable = true;
-            content.focus();
+    content.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (content.contentEditable === 'false' || !content.contentEditable) {
+            content.contentEditable = 'true';
             li.classList.add('editing');
             
-            // Select all text
-            const range = document.createRange();
-            range.selectNodeContents(content);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
+            // Clear placeholder text if it's the default
+            if (content.getAttribute('data-placeholder') === 'true' || content.textContent.trim() === 'Click to edit') {
+                content.textContent = '';
+                content.setAttribute('data-placeholder', 'false');
+            }
+            
+            // Focus and select all
+            setTimeout(() => {
+                content.focus();
+                const range = document.createRange();
+                range.selectNodeContents(content);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }, 0);
         }
     });
     
     // Save on blur
     content.addEventListener('blur', function() {
-        content.contentEditable = false;
+        content.contentEditable = 'false';
         li.classList.remove('editing');
         const trimmedText = content.textContent.trim();
         if (trimmedText === '') {
             content.textContent = 'Click to edit';
+            content.setAttribute('data-placeholder', 'true');
+        } else {
+            content.setAttribute('data-placeholder', 'false');
         }
         saveList(listId);
     });
@@ -223,6 +285,8 @@ function addListItem(listId, text, index) {
             e.preventDefault();
             content.blur();
         }
+        // Prevent event bubbling
+        e.stopPropagation();
     });
     
     // Delete button
