@@ -29,6 +29,14 @@ header h1 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+header .encouragement {
+    color: white;
+    font-size: 2rem;
+    font-weight: 500;
+    margin-top: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 main {
     display: flex;
     flex-direction: column;
@@ -256,7 +264,7 @@ main {
 
 /* Empty state */
 .editable-list:empty::before {
-    content: "No items yet. Click 'Add' to get started!";
+    content: "Click 'Add' to make it not empty";
     display: block;
     color: #adb5bd;
     font-style: italic;
@@ -268,6 +276,10 @@ main {
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;
+    }
+
+    header .encouragement {
+        font-size: 1.5rem;
     }
 
     #timer-time {

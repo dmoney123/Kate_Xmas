@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Session</title>
+    <title>Study Helper App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Study Session</h1>
+            <h1>Study Helper App</h1>
+            <p class="encouragement">You Got This!</p>
         </header>
 
         <main>
             <!-- Timer Section -->
             <section class="timer-section">
                 <div class="timer-controls">
-                    <label for="timer-input">Set Timer (minutes):</label>
+                    <label for="timer-input">Set Timer:</label>
                     <input type="number" id="timer-input" min="1" max="999" value="25" />
                     <button id="start-btn" class="btn btn-primary">Start</button>
                     <button id="pause-btn" class="btn btn-secondary" disabled>Pause</button>
@@ -30,21 +31,21 @@
             <!-- Lists Section -->
             <section class="lists-section">
                 <div class="list-container">
-                    <h2>Study Session Goals</h2>
+                    <h2>Session Goals</h2>
                     <ul id="goals-list" class="editable-list"></ul>
                     <button class="btn btn-add" onclick="addItem('goals-list')">+ Add Goal</button>
                 </div>
 
                 <div class="list-container">
-                    <h2>Questions</h2>
+                    <h2>Session Questions</h2>
                     <ul id="questions-list" class="editable-list"></ul>
                     <button class="btn btn-add" onclick="addItem('questions-list')">+ Add Question</button>
                 </div>
 
                 <div class="list-container">
-                    <h2>Future</h2>
+                    <h2>Future Work</h2>
                     <ul id="future-list" class="editable-list"></ul>
-                    <button class="btn btn-add" onclick="addItem('future-list')">+ Add Item</button>
+                    <button class="btn btn-add" onclick="addItem('future-list')">+ Add Future Work</button>
                 </div>
             </section>
         </main>
