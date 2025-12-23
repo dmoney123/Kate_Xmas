@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Session</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Study Session</h1>
+        </header>
+
+        <main>
+            <!-- Timer Section -->
+            <section class="timer-section">
+                <div class="timer-controls">
+                    <label for="timer-input">Set Timer (minutes):</label>
+                    <input type="number" id="timer-input" min="1" max="999" value="25" />
+                    <button id="start-btn" class="btn btn-primary">Start</button>
+                    <button id="pause-btn" class="btn btn-secondary" disabled>Pause</button>
+                    <button id="reset-btn" class="btn btn-secondary" disabled>Reset</button>
+                </div>
+                <div class="timer-display">
+                    <div id="timer-time">25:00</div>
+                </div>
+            </section>
+
+            <!-- Lists Section -->
+            <section class="lists-section">
+                <div class="list-container">
+                    <h2>Study Session Goals</h2>
+                    <ul id="goals-list" class="editable-list"></ul>
+                    <button class="btn btn-add" onclick="addItem('goals-list')">+ Add Goal</button>
+                </div>
+
+                <div class="list-container">
+                    <h2>Questions</h2>
+                    <ul id="questions-list" class="editable-list"></ul>
+                    <button class="btn btn-add" onclick="addItem('questions-list')">+ Add Question</button>
+                </div>
+
+                <div class="list-container">
+                    <h2>Future</h2>
+                    <ul id="future-list" class="editable-list"></ul>
+                    <button class="btn btn-add" onclick="addItem('future-list')">+ Add Item</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
